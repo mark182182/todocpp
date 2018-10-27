@@ -17,8 +17,22 @@ public:
   }
 };
 
+class writeToFile{
+public:
+  void writeFile(string lineToWrite, string fileToRead){
+    fstream todoFile;
+    todoFile.open(fileToRead);
+    todoFile << lineToWrite << endl;
+  }
+};
+
 int main(){
   readFromFile readFromFile;
+  writeToFile writeToFile;
+  string task;
+  cout << "Please write in a task:" << endl;
+  cin >> task;
+  writeToFile.writeFile(task, "todo.txt");
   readFromFile.readFile("todo.txt");
   return 0;
 }
