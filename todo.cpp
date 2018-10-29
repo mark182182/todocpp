@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-
-using namespace std;
+#include <vector>
 
 class readFromFile{
 public:
-  void readFile(string fileToRead){
-    ifstream todoFile;
-    string line;
+  void readFile(std::string fileToRead){
+    std::ifstream todoFile;
+    std::string line;
+    std::vector<std::string> todoArray;
     todoFile.open(fileToRead);
     while(getline(todoFile, line)){
-      cout << line << endl;
+      todoArray.push_back(line);
+    }
+    for (int i = 0; i < todoArray.size(); i++) {
+      std::cout << todoArray[i] << "\n";
     }
     todoFile.close();
   }
@@ -19,19 +22,19 @@ public:
 
 class writeToFile{
 public:
-  void writeFile(string lineToWrite, string fileToRead){
-    fstream todoFile;
+  void writeFile(std::string lineToWrite, std::string fileToRead){
+    std::fstream todoFile;
     todoFile.open(fileToRead);
-    todoFile << lineToWrite << endl;
+    todoFile << lineToWrite << "\n";
   }
 };
 
 int main(){
   readFromFile readFromFile;
   writeToFile writeToFile;
-  string task;
-  cout << "Please write in a task:" << endl;
-  cin >> task;
+  std::string task;
+  std::cout << "Please write in a task:" << "\n";
+  std::cin >> task;
   writeToFile.writeFile(task, "todo.txt");
   readFromFile.readFile("todo.txt");
   return 0;
