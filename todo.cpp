@@ -92,10 +92,14 @@ int main(int argc, char ** argv){
       while(1) {
         for (int i = 0; i < taskChoices.size(); i++) {
           if(i == taskHighlight){
+            start_color();
+            init_pair(2, COLOR_RED, COLOR_BLACK);
+            wattron(menuwin, COLOR_PAIR(2));
             wattron(menuwin, A_REVERSE);
           }
           mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, taskChoices[i].c_str());
           wattroff(menuwin, A_REVERSE);
+          wattroff(menuwin, COLOR_PAIR(2));
         }
         taskChoice = wgetch(menuwin);
 
@@ -141,10 +145,14 @@ int main(int argc, char ** argv){
       while(1){
         for (int i = 0; i < menuChoices.size(); i++) {
           if(i == taskHighlight){
+            start_color();
+            init_pair(2, COLOR_RED, COLOR_BLACK);
+            wattron(menuwin, COLOR_PAIR(2));
             wattron(menuwin, A_REVERSE);
           }
           mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, menuChoices[i].c_str());
           wattroff(menuwin, A_REVERSE);
+          wattroff(menuwin, COLOR_PAIR(2));
         }
         taskChoice = wgetch(menuwin);
 
@@ -217,10 +225,14 @@ int main(int argc, char ** argv){
       while(1){
         for (int i = 0; i < taskChoices.size(); i++) {
           if(i == taskHighlight){
+            start_color();
+            init_pair(2, COLOR_RED, COLOR_BLACK);
+            wattron(menuwin, COLOR_PAIR(2));
             wattron(menuwin, A_REVERSE);
           }
           mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, taskChoices[i].c_str());
           wattroff(menuwin, A_REVERSE);
+          wattroff(menuwin, COLOR_PAIR(2));
         }
         taskChoice = wgetch(menuwin);
 
@@ -290,10 +302,14 @@ int main(int argc, char ** argv){
       while(1) {
         for (int i = 0; i < taskChoices.size(); i++) {
           if(i == taskHighlight){
+            start_color();
+            init_pair(2, COLOR_RED, COLOR_BLACK);
+            wattron(menuwin, COLOR_PAIR(2));
             wattron(menuwin, A_REVERSE);
           }
           mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, taskChoices[i].c_str());
           wattroff(menuwin, A_REVERSE);
+          wattroff(menuwin, COLOR_PAIR(2));
         }
         taskChoice = wgetch(menuwin);
 
