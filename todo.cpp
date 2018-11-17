@@ -24,19 +24,27 @@ int main(int argc, char ** argv){
   int choice;
   int highlight = 0;
 
-  while(1){
+  while(1) {
     wresize(menuwin, HEIGHT, WIDTH);
     clear();
     wclear(menuwin);
     refresh();
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_RED);
+    wattron(menuwin, COLOR_PAIR(1));
     box(menuwin, (int)'/', (int)'-');
+    wattroff(menuwin, COLOR_PAIR(1));
     wrefresh(menuwin);
     for (int i = 0; i < 5; i++) {
       if(i == highlight){
+        start_color();
+        init_pair(2, COLOR_RED, COLOR_BLACK);
+        wattron(menuwin, COLOR_PAIR(2));
         wattron(menuwin, A_REVERSE);
       }
       mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, choices[i].c_str());
       wattroff(menuwin, A_REVERSE);
+      wattroff(menuwin, COLOR_PAIR(2));
     }
     choice = wgetch(menuwin);
 
@@ -67,7 +75,7 @@ int main(int argc, char ** argv){
       }
       todoFile.close();
 
-      wresize(menuwin, HEIGHT, WIDTH + 5);
+      wresize(menuwin, HEIGHT, WIDTH + 5 + taskChoices.size());
 
       int taskChoice;
       int taskHighlight = 0;
@@ -75,7 +83,11 @@ int main(int argc, char ** argv){
       clear();
       wclear(menuwin);
       refresh();
+      start_color();
+      init_pair(1, COLOR_WHITE, COLOR_RED);
+      wattron(menuwin, COLOR_PAIR(1));
       box(menuwin, (int)'/', (int)'-');
+      wattroff(menuwin, COLOR_PAIR(1));
       wrefresh(menuwin);
       while(1) {
         for (int i = 0; i < taskChoices.size(); i++) {
@@ -119,7 +131,11 @@ int main(int argc, char ** argv){
       clear();
       wclear(menuwin);
       refresh();
+      start_color();
+      init_pair(1, COLOR_WHITE, COLOR_RED);
+      wattron(menuwin, COLOR_PAIR(1));
       box(menuwin, (int)'/', (int)'-');
+      wattroff(menuwin, COLOR_PAIR(1));
       wrefresh(menuwin);
 
       while(1){
@@ -188,7 +204,11 @@ int main(int argc, char ** argv){
       clear();
       wclear(menuwin);
       refresh();
+      start_color();
+      init_pair(1, COLOR_WHITE, COLOR_RED);
+      wattron(menuwin, COLOR_PAIR(1));
       box(menuwin, (int)'/', (int)'-');
+      wattroff(menuwin, COLOR_PAIR(1));
       wrefresh(menuwin);
 
       mvwprintw(menuwin, 1, 4, "Select task to edit.");
@@ -257,7 +277,11 @@ int main(int argc, char ** argv){
       clear();
       wclear(menuwin);
       refresh();
+      start_color();
+      init_pair(1, COLOR_WHITE, COLOR_RED);
+      wattron(menuwin, COLOR_PAIR(1));
       box(menuwin, (int)'/', (int)'-');
+      wattroff(menuwin, COLOR_PAIR(1));
       wrefresh(menuwin);
 
       mvwprintw(menuwin, 1, 4, "Select task to remove.");
