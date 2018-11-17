@@ -10,26 +10,31 @@ int main(int argc, char ** argv){
   noecho();
   cbreak();
   int start_y, start_x;
-  start_y = start_x = 10;
+  start_y = start_x = 5;
 
-  WINDOW * menuwin = newwin(HEIGHT, WIDTH, start_y, start_x);
+  WINDOW * menuwin = newwin(HEIGHT, WIDTH, start_y, start_x + 40);
   refresh();
 
-  box(menuwin, (int)'/', (int)'/');
-  wrefresh(menuwin);
+  box(menuwin, (int)'/', (int)'-');
 
   keypad(menuwin, true);
 
-  std::string choices[5] = {"View tasks", "Complete a task", "Edit a task", "Remove a task", "Exit"};
+  std::string choices[5] = {"View tasks", "Edit a task", "Remove a task", "Exit"};
 
   int choice;
   int highlight = 0;
 
   while(1){
-    box(menuwin, (int)'/', (int)'/');
+    wresize(menuwin, HEIGHT, WIDTH);
+    clear();
+    wclear(menuwin);
+    refresh();
+    box(menuwin, (int)'/', (int)'-');
+    wrefresh(menuwin);
     for (int i = 0; i < 5; i++) {
-      if(i == highlight)
-      wattron(menuwin, A_REVERSE);
+      if(i == highlight){
+        wattron(menuwin, A_REVERSE);
+      }
       mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, choices[i].c_str());
       wattroff(menuwin, A_REVERSE);
     }
@@ -44,16 +49,14 @@ int main(int argc, char ** argv){
       break;
       case KEY_DOWN:
       highlight++;
-      if(highlight == 5){
-        highlight = 4;
+      if(highlight == 4){
+        highlight = 3;
       }
       break;
       default:
       break;
     }
     if (highlight == 0 && choice == 10) {
-      clear();
-      refresh();
       std::ifstream todoFile;
       std::string line;
       std::vector<std::string> taskChoices;
@@ -64,31 +67,25 @@ int main(int argc, char ** argv){
       }
       todoFile.close();
 
-      WINDOW * taskwin = newwin(taskChoices.size() * 1.48, WIDTH + 10, start_y, start_x);
-
-      system("clear");
-
-      box(taskwin, (int)'/', (int)'/');
-      wrefresh(taskwin);
-
-      keypad(taskwin, true);
+      wresize(menuwin, taskChoices.size() * 2, WIDTH + 10);
 
       int taskChoice;
       int taskHighlight = 0;
 
-      while(1){
+      clear();
+      wclear(menuwin);
+      refresh();
+      box(menuwin, (int)'/', (int)'-');
+      wrefresh(menuwin);
+      while(1) {
         for (int i = 0; i < taskChoices.size(); i++) {
-          if(i == taskHighlight)
-          {
-            wattron(taskwin, A_REVERSE);
-            mvwprintw(taskwin, (HEIGHT/5)+i+1, WIDTH/3, taskChoices[i].c_str());
-            wattroff(taskwin, A_REVERSE);
+          if(i == taskHighlight){
+            wattron(menuwin, A_REVERSE);
           }
+          mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, taskChoices[i].c_str());
+          wattroff(menuwin, A_REVERSE);
         }
-
-        taskChoice = wgetch(taskwin);
-        refresh();
-        wrefresh(menuwin);
+        taskChoice = wgetch(menuwin);
 
         switch (taskChoice) {
           case KEY_UP:
@@ -99,7 +96,7 @@ int main(int argc, char ** argv){
           break;
           case KEY_DOWN:
           taskHighlight++;
-          if(taskHighlight == taskChoices.size()){
+          if(taskHighlight == taskChoices.size()) {
             taskHighlight = taskChoices.size()-1;
           }
           break;
@@ -107,21 +104,91 @@ int main(int argc, char ** argv){
           break;
         }
         if(taskHighlight == 0 && taskChoice == 10) {
-          endwin();
           break;
         }
       }
     }
     else if (highlight == 1 && choice == 10) {
-      break;
+      while(1){
+        std::fstream todoFile;
+        std::string line;
+        std::vector<std::string> taskChoices;
+        todoFile.open("todo.txt");
+        while(getline(todoFile, line)) {
+          taskChoices.push_back(line);
+        }
+        todoFile.close();
+        mvwprintw(menuwin, HEIGHT/3, 0, "Which task would you like to edit?");
+        wrefresh(menuwin);
+        int c = getch();
+      }
     }
     else if (highlight == 2 && choice == 10) {
-      break;
+      while(1) {
+        std::ifstream deleteFromFile ("todo.txt");
+        std::string line;
+        std::vector<std::string> taskChoices;
+        taskChoices.push_back("Back to the menu");
+        while(getline(deleteFromFile, line)) {
+          taskChoices.push_back(line);
+        }
+
+        int taskChoice;
+        int taskHighlight = 0;
+
+        clear();
+        wclear(menuwin);
+        refresh();
+        box(menuwin, (int)'/', (int)'-');
+        wrefresh(menuwin);
+
+        mvwprintw(menuwin, 1, 4, "Select task to remove.");
+        wrefresh(menuwin);
+
+        while(1) {
+          for (int i = 0; i < taskChoices.size(); i++) {
+            if(i == taskHighlight){
+              wattron(menuwin, A_REVERSE);
+            }
+            mvwprintw(menuwin, (HEIGHT/5)+i+1, WIDTH/3, taskChoices[i].c_str());
+            wattroff(menuwin, A_REVERSE);
+          }
+          taskChoice = wgetch(menuwin);
+
+          switch (taskChoice) {
+            case KEY_UP:
+            taskHighlight--;
+            if(taskHighlight == -1){
+              taskHighlight = 0;
+            }
+            break;
+            case KEY_DOWN:
+            taskHighlight++;
+            if(taskHighlight == taskChoices.size()) {
+              taskHighlight = taskChoices.size()-1;
+            }
+            break;
+            default:
+            break;
+          }
+          if(taskHighlight == 0 && taskChoice == 10) {
+            break;
+          }
+        }
+        taskChoices.erase(taskChoices.begin() + taskHighlight);
+        if(deleteFromFile.is_open()) {
+          std::ofstream writeNewTasks ("whatever.txt");
+          for (int i = 0; i < taskChoices.size(); i++) {
+            writeNewTasks << taskChoices[i] << "\n";
+            mvwprintw(menuwin, HEIGHT/2+i, i, taskChoices[i].c_str());
+            wrefresh(menuwin);
+          }
+          deleteFromFile.close();
+          break;
+        }
+      }
     }
     else if (highlight == 3 && choice == 10) {
-      break;
-    }
-    else if (highlight == 4 && choice == 10) {
       break;
     }
   }
