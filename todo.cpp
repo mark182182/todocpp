@@ -184,7 +184,7 @@ int main(int argc, char ** argv){
           getstr(newTask);
           noecho();
           menuChoices.push_back(newTask);
-          std::ofstream writeNewTasks ("todo.txt");
+          std::ofstream writeNewTasks ("todo.txt", std::ios::app);
           for (int i = 2; i < menuChoices.size(); i++) {
             writeNewTasks << menuChoices[i] << "\n";
           }
